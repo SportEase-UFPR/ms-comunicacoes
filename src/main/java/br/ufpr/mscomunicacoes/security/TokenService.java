@@ -16,8 +16,6 @@ import java.time.ZoneOffset;
 @Service
 public class TokenService {
 
-    @Value("${api.security.token.mslocacoes.secret}")
-    private String msLocacoesSecret;
 
     @Value("${api.security.token.apigateway.secret}")
     private String apiGatewaySecret;
@@ -41,16 +39,6 @@ public class TokenService {
             log.error(ex.getMessage());
             throw new TokenInvalidoException("Token JWT inválido ou expirado");
         }
-    }
-
-    public String gerarTokenMsLocacoes() {
-        var algoritmo = Algorithm.HMAC256(msLocacoesSecret);
-        return JWT.create()
-                .withIssuer(msLocacoesIssuer)
-                .withSubject(msLocacoesIssuer)
-                .withExpiresAt(dataExpiracao(20)) //data da expiração
-                .sign(algoritmo); //assinatura
-
     }
 
     public String removerPrefixoToken(String token) {
