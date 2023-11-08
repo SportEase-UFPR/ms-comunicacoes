@@ -17,7 +17,7 @@ public interface NotificacaoRepository extends JpaRepository<Notificacao, Long> 
     @Query(value = """
     UPDATE tb_notificacoes
     SET lida=true
-    WHERE idCliente=?1
+    WHERE id_cliente=?1
 """, nativeQuery = true)
     @Modifying
     void marcarNotificacoesComoLida(long idCliente);
