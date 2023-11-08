@@ -1,6 +1,7 @@
 package br.ufpr.mscomunicacoes.repository;
 
 import br.ufpr.mscomunicacoes.model.entity.Notificacao;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -12,6 +13,7 @@ import java.util.List;
 public interface NotificacaoRepository extends JpaRepository<Notificacao, Long> {
     List<Notificacao> findByIdCliente(Long idCliente);
 
+    @Transactional
     @Query(value = """
     UPDATE tb_notificacoes
     SET lida=true
