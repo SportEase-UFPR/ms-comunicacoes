@@ -1,6 +1,7 @@
 package br.ufpr.mscomunicacoes.model.dto.notificacao;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +12,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CriacaoNotificacaoRequest {
-    @NotBlank(message = "O idCliente é obrigatório. Use idCliente=-1 para enviar notificação a todos os clientes")
+    @NotNull(message = "O idCliente é obrigatório. Use idCliente=-1 para enviar notificação a todos os clientes")
     private Long idCliente;
 
     @NotBlank(message = "O título é obrigatório")
