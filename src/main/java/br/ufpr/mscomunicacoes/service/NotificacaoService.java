@@ -7,6 +7,7 @@ import br.ufpr.mscomunicacoes.model.dto.notificacao.NotificacaoResponse;
 import br.ufpr.mscomunicacoes.model.entity.Notificacao;
 import br.ufpr.mscomunicacoes.repository.NotificacaoRepository;
 import br.ufpr.mscomunicacoes.security.TokenService;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -69,6 +70,7 @@ public class NotificacaoService {
         return response;
     }
 
+    @Transactional
     public Void marcarNotificacoesComoLida(String token) {
         var idCliente = Long.parseLong(tokenService.getIssuer(token, "idPessoa"));
 
