@@ -23,8 +23,17 @@ public class TokenService {
     @Value("${api.gateway.issuer}")
     private String apiGatewayIssuer;
 
+    @Value("${api.mscomunicacoes.issuer}")
+    private String msComunicacoesIssuer;
+
+    @Value("${api.security.token.mscomunicacoes.secret}")
+    private String msComunicacoesSecret;
+
     @Value("${api.mslocacoes.issuer}")
     private String msLocacoesIssuer;
+
+    @Value("${api.security.token.mslocacoes.secret}")
+    private String msLocacoesSecret;
 
 
     public void validarToken(String tokenJWT) {
@@ -39,6 +48,29 @@ public class TokenService {
             log.error(ex.getMessage());
             throw new TokenInvalidoException("Token JWT inválido ou expirado");
         }
+    }
+
+    public void validarTokenApiMsLocacoes(String tokenApi) {
+        var tokenFormatado = removerPrefixoToken(tokenApi);
+        try {
+            var algoritmo = Algorithm.HMAC256(msLocacoesSecret);
+            JWT.require(algoritmo)
+                    .withIssuer(msLocacoesIssuer)
+                    .build()
+                    .verify(tokenFormatado);
+        } catch (JWTVerificationException ex) {
+            log.error(ex.getMessage());
+            throw new TokenInvalidoException("Token JWT inválido ou expirado");
+        }
+    }
+
+    public String gerarTokenMsComunicacoes() {
+        var algoritmo = Algorithm.HMAC256(msComunicacoesSecret);
+        return JWT.create()
+                .withIssuer(msComunicacoesIssuer)
+                .withSubject(msComunicacoesIssuer)
+                .withExpiresAt(dataExpiracao(20)) //data da expiração
+                .sign(algoritmo); //assinatura
     }
 
     public String removerPrefixoToken(String token) {
