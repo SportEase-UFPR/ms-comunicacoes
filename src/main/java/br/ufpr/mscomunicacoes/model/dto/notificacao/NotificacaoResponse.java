@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -21,11 +23,14 @@ public class NotificacaoResponse {
 
     private Boolean lida;
 
+    private LocalDateTime dataHora;
+
     public NotificacaoResponse(Notificacao notificacao) {
         this.id = notificacao.getId();
         this.idCliente = notificacao.getIdCliente();
         this.titulo = notificacao.getTitulo();
         this.conteudo = notificacao.getConteudo();
         this.lida = notificacao.getLida();
+        this.dataHora = notificacao.getDataHora();
     }
 }
