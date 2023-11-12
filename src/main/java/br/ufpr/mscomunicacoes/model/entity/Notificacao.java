@@ -9,7 +9,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-import static br.ufpr.mscomunicacoes.constants.HorarioBrasil.HORA_ATUAL;
+import static br.ufpr.mscomunicacoes.utils.HorarioBrasil.buscarHoraAtual;
 
 @Entity(name = "tb_notificacoes")
 @Getter
@@ -41,6 +41,6 @@ public class Notificacao {
         this.titulo = request.getTitulo();
         this.conteudo = request.getConteudo();
         this.lida = false;
-        this.dataHora = HORA_ATUAL;
+        this.dataHora = buscarHoraAtual();
     }
 }
