@@ -11,92 +11,56 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.List;
 
 @Slf4j
 @Service
 public class TokenService {
 
 
-    @Value("${api.security.token.apigateway.secret}")
+    @Value("${api.gateway.secret}")
     private String apiGatewaySecret;
 
-    @Value("${api.security.token.mscomunicacoes.secret}")
-    private String msComunicacoesSecret;
-
-    @Value("${api.security.token.mslocacoes.secret}")
-    private String msLocacoesSecret;
-
+    @Value("${ms.secret}")
+    private String msSecret;
 
     @Value("${api.gateway.issuer}")
     private String apiGatewayIssuer;
 
-    @Value("${api.mscomunicacoes.issuer}")
-    private String msComunicacoesIssuer;
-
-
-    @Value("${api.mslocacoes.issuer}")
-    private String msLocacoesIssuer;
-
-
+    @Value("${ms.issuer}")
+    private String msIssuer;
 
     public void validarTokenApiGateway(String tokenJWT) {
-        var tokenFormatado = removerPrefixoToken(tokenJWT);
         try {
             var algoritmo = Algorithm.HMAC256(apiGatewaySecret);
             JWT.require(algoritmo)
                     .withIssuer(apiGatewayIssuer)
                     .build()
-                    .verify(tokenFormatado);
+                    .verify(tokenJWT);
         } catch (JWTVerificationException ex) {
             log.error(ex.getMessage());
             throw new TokenInvalidoException("Token JWT inválido ou expirado");
         }
     }
 
-    public void validarTokenApiMsLocacoes(String tokenApi) {
+    public void validarTokenMs(String tokenApi) {
         var tokenFormatado = removerPrefixoToken(tokenApi);
         try {
-            var algoritmo = Algorithm.HMAC256(msLocacoesSecret);
+            var algoritmo = Algorithm.HMAC256(msSecret);
             JWT.require(algoritmo)
-                    .withIssuer(msLocacoesIssuer)
+                    .withIssuer(msIssuer)
                     .build()
                     .verify(tokenFormatado);
         } catch (JWTVerificationException ex) {
-            log.error(ex.getMessage());
             throw new TokenInvalidoException("Token JWT inválido ou expirado");
         }
     }
 
-    public void validarTokenApi(String tokenApi) {
-        var tokenFormatado = removerPrefixoToken(tokenApi);
 
-        for (int i = 0; i < issuers.size(); i++) {
-            try {
-                var algoritmo = Algorithm.HMAC256(secrets.get(i));
-                JWT.require(algoritmo)
-                        .withIssuer(issuers.get(i))
-                        .build()
-                        .verify(tokenFormatado);
-
-                // Se a verificação for bem-sucedida, retornar ou registrar o sucesso, dependendo do caso.
-                return;
-            } catch (JWTVerificationException ignored) {
-                // Ignorar exceções e tentar com a próxima combinação de issuer e secret.
-            }
-        }
-
-        // Se nenhum issuer e secret combinado for bem-sucedido, lançar uma exceção.
-        log.error("Token JWT inválido ou expirado");
-        throw new TokenInvalidoException("Token JWT inválido ou expirado");
-    }
-
-
-    public String gerarTokenMsComunicacoes() {
-        var algoritmo = Algorithm.HMAC256(msComunicacoesSecret);
+    public String gerarTokenMs() {
+        var algoritmo = Algorithm.HMAC256(msSecret);
         return JWT.create()
-                .withIssuer(msComunicacoesIssuer)
-                .withSubject(msComunicacoesIssuer)
+                .withIssuer(msIssuer)
+                .withSubject(msIssuer)
                 .withExpiresAt(dataExpiracao(20)) //data da expiração
                 .sign(algoritmo); //assinatura
     }

@@ -32,7 +32,7 @@ public class MsCadastrosClient {
     private HttpHeaders gerarCabecalho() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("AuthorizationApi", tokenService.gerarTokenMsComunicacoes());
+        headers.set("AuthorizationApi", tokenService.gerarTokenMs());
         return headers;
     }
 

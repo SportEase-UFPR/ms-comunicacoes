@@ -27,7 +27,7 @@ public class NotificacaoController {
     @PostMapping
     public ResponseEntity<NotificacaoResponse> criarNotificacao(@RequestBody @Valid CriacaoNotificacaoRequest request,
                                                                 @RequestHeader("AuthorizationApi") String token) {
-        tokenService.validarTokenApiMsLocacoes(token);
+        tokenService.validarTokenMs(token);
         return ResponseEntity.status(HttpStatus.CREATED).body(notificacaoService.criarNotificacao(request));
     }
 
