@@ -3,6 +3,7 @@ package br.ufpr.mscomunicacoes.service;
 
 import br.ufpr.mscomunicacoes.exceptions.EmailException;
 import br.ufpr.mscomunicacoes.model.dto.email.CriacaoEmailRequest;
+import br.ufpr.mscomunicacoes.model.dto.email.EnviarEmailRequest;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -10,6 +11,9 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Service
 public class EmailService {
@@ -33,4 +37,26 @@ public class EmailService {
         mailSender.send(mensagem);
         return null;
     }
+
+    public Void enviarEmailClientes(EnviarEmailRequest request) {
+        List<String> listaEmails = request.getListaEmails();
+        String assunto = request.getAssunto();
+        String corpo = request.getCorpo();
+
+        ExecutorService executorService = Executors.newFixedThreadPool(10); //número de threads
+
+        for (String email : listaEmails) {
+            executorService.submit(() ->
+                enviarEmail(CriacaoEmailRequest.builder()
+                        .assunto(assunto)
+                        .mensagem(corpo)
+                        .email(email)
+                        .build()));
+        }
+
+        executorService.shutdown();
+
+        return null;
+    }
+
 }

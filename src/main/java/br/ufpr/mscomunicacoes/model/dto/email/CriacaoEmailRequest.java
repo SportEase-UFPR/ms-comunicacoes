@@ -1,15 +1,13 @@
 package br.ufpr.mscomunicacoes.model.dto.email;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class CriacaoEmailRequest {
     @NotBlank(message = "O email é obrigatório")
     private String email;
