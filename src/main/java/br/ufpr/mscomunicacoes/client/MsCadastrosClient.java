@@ -18,7 +18,7 @@ import java.util.List;
 @Service
 public class MsCadastrosClient {
 
-    @Value("${url.ms.cadastros.clientes}")
+    @Value("${url.ms.cadastros}")
     private String urlMsCadastros;
 
     private final RestTemplate restTemplate;

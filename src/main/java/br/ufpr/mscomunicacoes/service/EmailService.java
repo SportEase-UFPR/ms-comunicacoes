@@ -30,7 +30,7 @@ public class EmailService {
             helper = new MimeMessageHelper(mensagem, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
             helper.setTo(request.getEmail());
             helper.setSubject(request.getAssunto());
-            helper.setText(request.getEmail(), true);
+            helper.setText(request.getMensagem(), true);
         } catch (MessagingException e) {
             throw new EmailException(e.getMessage());
         }

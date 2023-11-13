@@ -20,11 +20,17 @@ import java.util.ArrayList;
 @RestController
 @RequestMapping("/email")
 public class EmailController {
-    private TokenService tokenService;
-    private EmailService emailService;
-    private MsCadastrosClient msCadastrosClient;
+    private final TokenService tokenService;
+    private final EmailService emailService;
+    private final MsCadastrosClient msCadastrosClient;
 
-    @PostMapping
+    public EmailController(TokenService tokenService, EmailService emailService, MsCadastrosClient msCadastrosClient) {
+        this.tokenService = tokenService;
+        this.emailService = emailService;
+        this.msCadastrosClient = msCadastrosClient;
+    }
+
+    @PostMapping("via-api-gateway")
     public ResponseEntity<Void> enviarEmailViaApiGateway(@RequestBody @Valid CriacaoEmailRequest request) {
         return ResponseEntity.status(HttpStatus.OK).body(emailService.enviarEmail(request));
     }
