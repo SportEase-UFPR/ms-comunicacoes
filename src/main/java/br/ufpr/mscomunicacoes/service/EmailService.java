@@ -56,6 +56,7 @@ public class EmailService {
 
         executorService.shutdown();
 
+        while (!executorService.isTerminated()) {}
         return null;
     }
 
