@@ -4,6 +4,7 @@ package br.ufpr.mscomunicacoes.service;
 import br.ufpr.mscomunicacoes.exceptions.EmailException;
 import br.ufpr.mscomunicacoes.model.dto.email.CriacaoEmailRequest;
 import br.ufpr.mscomunicacoes.model.dto.email.EnviarEmailRequest;
+import br.ufpr.mscomunicacoes.model.dto.email.EnviarEmailResponse;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -23,7 +24,7 @@ public class EmailService {
         this.mailSender = mailSender;
     }
 
-    public Void enviarEmail(CriacaoEmailRequest request) {
+    public EnviarEmailResponse  enviarEmail(CriacaoEmailRequest request) {
         MimeMessage mensagem = mailSender.createMimeMessage();
         MimeMessageHelper helper;
         try {
@@ -35,10 +36,12 @@ public class EmailService {
             throw new EmailException(e.getMessage());
         }
         mailSender.send(mensagem);
-        return null;
+        return EnviarEmailResponse.builder()
+                .mensagem("emails enviados com sucesso")
+                .build();
     }
 
-    public Void enviarEmailClientes(EnviarEmailRequest request) {
+    public EnviarEmailResponse enviarEmailClientes(EnviarEmailRequest request) {
         List<String> listaEmails = request.getListaEmails();
         String assunto = request.getAssunto();
         String corpo = request.getCorpo();
@@ -57,7 +60,9 @@ public class EmailService {
         executorService.shutdown();
 
         while (!executorService.isTerminated()) {}
-        return null;
+        return EnviarEmailResponse.builder()
+                .mensagem("emails enviados com sucesso")
+                .build();
     }
 
 }

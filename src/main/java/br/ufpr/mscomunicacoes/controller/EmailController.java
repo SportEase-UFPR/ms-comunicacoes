@@ -5,6 +5,7 @@ import br.ufpr.mscomunicacoes.client.MsCadastrosClient;
 import br.ufpr.mscomunicacoes.model.dto.email.CriacaoEmailRequest;
 
 import br.ufpr.mscomunicacoes.model.dto.email.EnviarEmailRequest;
+import br.ufpr.mscomunicacoes.model.dto.email.EnviarEmailResponse;
 import br.ufpr.mscomunicacoes.model.dto.email.EnviarEmailTodosRequest;
 import br.ufpr.mscomunicacoes.security.TokenService;
 import br.ufpr.mscomunicacoes.service.EmailService;
@@ -31,23 +32,23 @@ public class EmailController {
     }
 
     @PostMapping("via-api-gateway")
-    public ResponseEntity<Void> enviarEmailViaApiGateway(@RequestBody @Valid CriacaoEmailRequest request) {
+    public ResponseEntity<EnviarEmailResponse> enviarEmailViaApiGateway(@RequestBody @Valid CriacaoEmailRequest request) {
         return ResponseEntity.status(HttpStatus.OK).body(emailService.enviarEmail(request));
     }
 
     @PostMapping("/via-ms")
-    public ResponseEntity<Void> enviarEmailViaMs(@RequestBody @Valid CriacaoEmailRequest request,
+    public ResponseEntity<EnviarEmailResponse> enviarEmailViaMs(@RequestBody @Valid CriacaoEmailRequest request,
                                                  @RequestHeader("AuthorizationApi") String token) {
         tokenService.validarTokenMs(token);
         return ResponseEntity.status(HttpStatus.OK).body(emailService.enviarEmail(request));
     }
 
     @PostMapping
-    public ResponseEntity<Void> enviarEmailClientes(@RequestBody @Valid EnviarEmailRequest request) {
+    public ResponseEntity<EnviarEmailResponse> enviarEmailClientes(@RequestBody @Valid EnviarEmailRequest request) {
         return ResponseEntity.status(HttpStatus.OK).body(emailService.enviarEmailClientes(request));
     }
     @PostMapping("/todos")
-    public ResponseEntity<Void> enviarEmailTodosClientes(@RequestBody @Valid EnviarEmailTodosRequest request) {
+    public ResponseEntity<EnviarEmailResponse> enviarEmailTodosClientes(@RequestBody @Valid EnviarEmailTodosRequest request) {
         var listaBuscarEmailsClientes = msCadastrosClient.buscarEmailsClientes();
         var listaEmailsClientes = new ArrayList<String>();
 
