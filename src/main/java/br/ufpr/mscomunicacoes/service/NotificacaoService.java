@@ -1,8 +1,10 @@
 package br.ufpr.mscomunicacoes.service;
 
 import br.ufpr.mscomunicacoes.client.MsCadastrosClient;
+import br.ufpr.mscomunicacoes.client.NativeNotifyClient;
 import br.ufpr.mscomunicacoes.exceptions.EntityNotFoundException;
 import br.ufpr.mscomunicacoes.model.dto.notificacao.CriacaoNotificacaoRequest;
+import br.ufpr.mscomunicacoes.model.dto.notificacao.NativeNotifyRequest;
 import br.ufpr.mscomunicacoes.model.dto.notificacao.NotificacaoResponse;
 import br.ufpr.mscomunicacoes.model.entity.Notificacao;
 import br.ufpr.mscomunicacoes.repository.NotificacaoRepository;
@@ -18,11 +20,13 @@ public class NotificacaoService {
     private final NotificacaoRepository repository;
     private final MsCadastrosClient msCadastrosClient;
     private final TokenService tokenService;
+    private final NativeNotifyClient nativeNotifyClient;
 
-    public NotificacaoService(NotificacaoRepository repository, MsCadastrosClient msCadastrosClient, TokenService tokenService) {
+    public NotificacaoService(NotificacaoRepository repository, MsCadastrosClient msCadastrosClient, TokenService tokenService, NativeNotifyClient nativeNotifyClient) {
         this.repository = repository;
         this.msCadastrosClient = msCadastrosClient;
         this.tokenService = tokenService;
+        this.nativeNotifyClient = nativeNotifyClient;
     }
 
     public NotificacaoResponse criarNotificacao(CriacaoNotificacaoRequest request) {
@@ -53,6 +57,12 @@ public class NotificacaoService {
     private NotificacaoResponse criarNotificacaoIndividual(CriacaoNotificacaoRequest request) {
         var novaNotificacao = new Notificacao(request);
         repository.save(novaNotificacao);
+
+        //criar notificação push
+        nativeNotifyClient.fazerRequisicaoNotifyPush(
+                new NativeNotifyRequest(request.getIdCliente().toString(), request.getTitulo(), request.getConteudo()));
+
+
         return new NotificacaoResponse(novaNotificacao);
     }
 
